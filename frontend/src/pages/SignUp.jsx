@@ -34,16 +34,19 @@ export default function SignUp() {
       const data = await res.json();
   
       if (data.success === false){
-        return setErrorMessage(data.message);  
+          setLoading(false);
+          setErrorMessage(data.message);
+          return;
       }
-      setLoading(false);
       if (res.ok){
+        setLoading(false);
+        setErrorMessage(null);
         navigate('/signIn');
       }
 
     } catch (error) {
-      setErrorMessage(error.message);
       setLoading(false);
+      setErrorMessage(error.message);
     }
   }
 
