@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 export default function Profile() {
   const { currentUser } = useSelector((state)=> state.user);
   return (
-    <div className='p-3 max-w-3xl mx-auto'>
+    <div className='p-3 max-w-lg mx-auto'>
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
       <form className='flex flex-col gap-4'>
         <img className='w-24 h-24 rounded-full object-cover self-center mt-2 cursor-pointer' src={currentUser.avatar} alt="profile photo" />
