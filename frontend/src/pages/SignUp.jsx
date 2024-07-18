@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import {Link, useNavigate} from 'react-router-dom';
+import OAuth from '../Components/OAuth';
 
 
 export default function SignUp() {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({});
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
 
@@ -20,11 +21,11 @@ export default function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault(); {/*  prevents reload each time submit is clicked on.*/}
     if (!formData.username || !formData.email || !formData.password){
-      setErrorMessage('All field are required')
+      setError('All field are required')
     }
     try {   
       setLoading(true);
-      setErrorMessage(null);
+      setError(null);
 
       const res = await fetch('/api/auth/signup', {
         method: 'POST',
@@ -35,18 +36,18 @@ export default function SignUp() {
   
       if (data.success === false){
           setLoading(false);
-          setErrorMessage(data.message);
+          setError(data.message);
           return;
       }
       if (res.ok){
         setLoading(false);
-        setErrorMessage(null);
+        setError(null);
         navigate('/signIn');
       }
 
     } catch (error) {
       setLoading(false);
-      setErrorMessage(error.message);
+      setError(error.message);
     }
   }
 
@@ -62,6 +63,7 @@ export default function SignUp() {
             className="bg-slate-700 p-3 border rounded-lg text-white uppercase hover:opacity-90 disabled:opacity-80">
               {loading ? 'loading' : 'Sign up'}
           </button>
+          <OAuth />
         </form>
         <div className='flex gap-2 my-4'>
           <p>Have an account?</p>
@@ -69,7 +71,7 @@ export default function SignUp() {
             <span className='text-blue-700'>sign in</span>
           </Link>
         </div>
-        {errorMessage && <p className='text-red-500 mt-5'>{errorMessage}</p> }
+        {error && <p className='text-red-500 mt-5'>{error}</p> }
     </div>
   )
 }
