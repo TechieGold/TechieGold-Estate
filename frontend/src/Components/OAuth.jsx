@@ -6,37 +6,45 @@ import { useNavigate } from 'react-router-dom';
 
 
 export default function OAuth() {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const auth = getAuth(app)
+  
+  const handleGoogleAuth = async () => {
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account'})
 
-  const handleGoogleClick = async() => {
     try {
-      const provider = new GoogleAuthProvider();
-      const auth = getAuth(app);
-      const result = await signInWithPopup(auth, provider);
-
-      const res = await fetch('/api/auth/google', {
+      const resultFromGoogle = await signInWithPopup(auth, provider);
+      // console.log(resultFromGoogle);
+      const res = await fetch('api/auth/google', {
         method: 'POST',
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
-                            name: result.user.displayName,
-                            email: result.user.email,
-                            photo: result.user.photoURL })
+          name: resultFromGoogle.user.displayName,
+          email: resultFromGoogle.user.email,
+          googlePhotoUrl: resultFromGoogle.user.photoURL,
+         }),
       })
-      const data = await res.json();
-      dispatch(signInSuccess(data));
-      navigate('/');
+      const data = await res.json()
 
+      if (res.ok) {
+        dispatch(signInSuccess(data))
+        navigate('/')
+      }
+      
     } catch (error) {
-      console.log('Could not sign in with google', error);
+      console.log(error)
     }
+    
   }
   return (
         <button
           type="button"
-          onClick={handleGoogleClick}
+          onClick={handleGoogleAuth}
           className="p-3 border rounded-lg bg-green-500 text-white uppercase hover:opacity-80">
           Continue with google
         </button>
   )
 }
+
