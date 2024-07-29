@@ -12,7 +12,6 @@ export default function Profile() {
   const [formData, setFormData] = useState({});
   
 
-
   useEffect(() => {
     if (file){
       handleFileUpload(file)
@@ -49,6 +48,8 @@ export default function Profile() {
           onClick={()=>fileRef.current.click()}
           src={formData.avatar || currentUser.avatar} alt="profile photo" />
 
+        {/* Displays the image upload status,
+        providing feedback on errors, progress, and success. */}
         <p className='text-sm self-center'>
           { imageUploadError ? (
               <span className='text-red-700'>Could not upload image, try again!</span>
@@ -56,7 +57,7 @@ export default function Profile() {
               <span className='text-slate-500'>{`Uploading ${imageUploadProgress}%`}</span>
             ) :  imageUploadProgress === 100 ? (
               <span className='text-green-700'>Image uploaded successfully</span>
-            ) : (' ')     
+            ) : (' ')    
           }
         </p>
         
